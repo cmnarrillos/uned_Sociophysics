@@ -53,7 +53,7 @@ for k in k_values:
 plt.figure()
 for k, ac_i in zip(k_values, ac):
     plt.plot(group_size, ac_i, label=f'$k={k}$')
-plt.title('Critical support')
+plt.title('Critical support for even groups')
 plt.xlabel('Group Size')
 plt.ylabel('$a_{c,r}$')
 plt.legend()

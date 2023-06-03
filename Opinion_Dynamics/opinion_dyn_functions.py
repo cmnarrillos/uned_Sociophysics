@@ -58,9 +58,10 @@ def plot_threshold(x, a_t1, group_size, k=None, folder='results'):
         plt.plot(x, y, label=r'$r = ' + str(group_size[jj]) + '$')
     plt.plot(x, x, color='k', linewidth=2)
     if not k:
-        plt.title(r'Threshold for odd groups')
+        plt.title(r'Evolution of idea support for odd groups')
     else:
-        plt.title(r'Threshold for even groups with $k=' + str(k) + '$')
+        plt.title(r'Evolution of idea support for even groups with '
+                  r'$k=' + str(k) + '$')
     plt.xlabel(r'$a_t$')
     plt.ylabel(r'$a_{t+1}$')
     plt.xlim([0, 1])
