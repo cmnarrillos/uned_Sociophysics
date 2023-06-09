@@ -16,7 +16,7 @@ def initialize_circle(n, m, perc):
     radius = min(n, m)*perc
     matrix = np.where(np.array(
                 [[(i-n/2)**2 + (j-m/2)**2 < radius**2
-                  for i in range(n)] for j in range(m)]),
+                  for j in range(m)] for i in range(n)]),
                 1, -1)
     return matrix
 
@@ -38,6 +38,6 @@ def random_neighbor(i, j, N, M):
     The array is considered cyclical, that is, the neighbors of element (0,0)
     are (0,1), (1,0), (0, N-1) and (N-1, 0)
     """
-    neighbors = [(i-1, j), ((i+1)//N, j), (i, j-1), (i, (j+1)//M)]
+    neighbors = [(i-1, j), ((i+1) % N, j), (i, j-1), (i, (j+1) % M)]
     rnd_neighbor = random.choice(neighbors)
     return rnd_neighbor
