@@ -12,7 +12,7 @@ id_test = 'voter_' + current_time.strftime("%Y-%m-%d_%H-%M-%S")
 if not os.path.exists('./tests/' + id_test):
     os.makedirs('./tests/' + id_test)
 
-max_iter = 250000000
+max_iter = 200000000
 num_max_stuck = max(200, max_iter//100)
 circle = True
 radius = 0.48
@@ -37,16 +37,16 @@ no_changes_since = 0
 
 for iteration in range(max_iter):
     # Select a random element of the matrix: ii
-    ii_x, ii_y = random_element(population_opinion)
+    elem = random_element(population_opinion)
 
     # Select a random neighbor of this element: jj
-    jj_x, jj_y = random_neighbor(ii_x, ii_y, n, m)
+    neighbor = random_neighbor(elem, n, m)
 
     # Update the opinion of the agent ii according to Voter model
-    if population_opinion[ii_x, ii_y] == population_opinion[jj_x, jj_y]:
+    if population_opinion[elem] == population_opinion[neighbor]:
         no_changes_since += 1
     else:
-        population_opinion[ii_x, ii_y] = population_opinion[jj_x, jj_y]
+        population_opinion[elem] = population_opinion[neighbor]
         no_changes_since = 0
 
     # Exit the loop if there are no updates
@@ -56,7 +56,7 @@ for iteration in range(max_iter):
         break
 
     # Plot intermediate steps through the process
-    if iteration % (max_iter//10) == 0 & iteration > 0:
+    if (iteration % (max_iter//20) == 0) & (iteration > 0):
         plt.figure(figsize=(8, 6))
         plt.imshow(population_opinion, cmap='gray')
         plt.title(f'Population Opinion after {iteration+1} iterations')
