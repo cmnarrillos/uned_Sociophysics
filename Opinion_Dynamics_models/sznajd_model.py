@@ -12,6 +12,8 @@ id_test = 'sznajd_' + current_time.strftime("%Y-%m-%d_%H-%M-%S")
 if not os.path.exists('./tests/' + id_test):
     os.makedirs('./tests/' + id_test)
 
+
+# PARAMS of the test
 max_iter = 50000
 num_max_stuck = max(200, max_iter//100)
 circle = False
@@ -25,15 +27,11 @@ m = 250
 
 # Initialize population opinion
 if circle:
-    initial_state = initialize_circle(n, m, radius)
+    population_opinion = initialize_circle(n, m, radius)
 else:
-    initial_state = initialize_random_matrix(n, m, bias)
+    population_opinion = initialize_random_matrix(n, m, bias)
 
-
-t0 = time.time()
-
-population_opinion = initial_state.copy()
-
+# Plot the initial state
 plt.figure(figsize=(8, 6))
 plt.imshow(population_opinion, cmap='gray')
 plt.title(f'Initial state of Population Opinion')
@@ -44,9 +42,12 @@ plt.tight_layout()
 plt.savefig(f'./tests/{id_test}/population_init.png')
 plt.close()
 
+
 no_changes_since = 0
 num_1s = [np.count_nonzero(population_opinion == 1)]
+t0 = time.time()
 
+# Sznajd model
 for iteration in range(max_iter):
     # Select a random element of the matrix: ii
     elem = random_element(population_opinion)
@@ -93,6 +94,7 @@ for iteration in range(max_iter):
 
 dt = time.time() - t0
 
+
 # Plot the population at the end of the process
 plt.figure(figsize=(8, 6))
 plt.imshow(population_opinion, cmap='gray')
@@ -108,6 +110,7 @@ plt.savefig(f'./tests/{id_test}/population_end.png')
 plt.close()
 
 
+# Plot Support evolution during simulation
 pop_size = np.size(population_opinion)
 plt.figure(figsize=(8, 6))
 plt.plot([supporters*100/pop_size for supporters in num_1s])
@@ -122,6 +125,7 @@ plt.savefig(f'./tests/{id_test}/support_evolution.png')
 plt.close()
 
 
+# Document the test
 with open(f'./tests/{id_test}/doc_test.txt', 'w') as f:
     f.write(f'Sznajd test with population shape [{n}, {m}]\n\n')
     if circle:
@@ -138,5 +142,3 @@ with open(f'./tests/{id_test}/doc_test.txt', 'w') as f:
         f.write(f'Process stopped due to max iter criteria\n\n')
     f.write(f'Time employed for running and plotting intermediate '
             f'steps: {dt} s')
-
-
