@@ -12,10 +12,10 @@ id_test = 'voter_' + current_time.strftime("%Y-%m-%d_%H-%M-%S")
 if not os.path.exists('./tests/' + id_test):
     os.makedirs('./tests/' + id_test)
 
-max_iter = 1000000
+max_iter = 250000000
 num_max_stuck = max(200, max_iter//100)
 circle = True
-radius = 0.55
+radius = 0.48
 
 # Shape of the population (N, M)
 n = 200
@@ -56,14 +56,29 @@ for iteration in range(max_iter):
         break
 
     # Plot intermediate steps through the process
-    if iteration % (max_iter//10) == 0:
+    if iteration % (max_iter//10) == 0 & iteration > 0:
+        plt.figure(figsize=(8, 6))
         plt.imshow(population_opinion, cmap='gray')
+        plt.title(f'Population Opinion after {iteration+1} iterations')
+        plt.colorbar(ticks=[-1, 1])
+        plt.xticks([])
+        plt.yticks([])
+        plt.tight_layout()
         plt.savefig(f'./tests/{id_test}/population_iter{iteration}.png')
 
 dt = time.time() - t0
 
 # Plot the population at the end of the process
+plt.figure(figsize=(8, 6))
 plt.imshow(population_opinion, cmap='gray')
+if iteration < max_iter-1:
+    plt.title(f'Population Opinion after {iteration+1} iterations')
+else:
+    plt.title(f'Population Opinion after {max_iter} iterations')
+plt.colorbar(ticks=[-1, 1])
+plt.xticks([])
+plt.yticks([])
+plt.tight_layout()
 plt.savefig(f'./tests/{id_test}/population_end.png')
 
 
