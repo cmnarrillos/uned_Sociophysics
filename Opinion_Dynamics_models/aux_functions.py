@@ -3,26 +3,33 @@ import numpy as np
 
 random.seed(11859)
 
-def initialize_random_matrix(N, M, bias=0.5):
+
+def initialize_random_scalar_network(N, M, bias=0.5):
     choices = [-1, 1]
     probabilities = [1 - bias, bias]
-    matrix = np.random.choice(choices, size=(N, M), p=probabilities)
-    return matrix
+    network = np.random.choice(choices, size=(N, M), p=probabilities)
+    return network
 
 
-def initialize_circle(n, m, perc):
+def initialize_circular_scalar_network(n, m, perc):
     """
     Initialize a rectangular matrix which has binary 1/-1 values,
     being the ones forming a circle around the center of radius
     a given % of the smaller direction
     """
     radius = min(n, m)*perc
-    matrix = np.where(np.array(
+    network = np.where(np.array(
                 [[(i-n/2)**2 + (j-m/2)**2 < radius**2
                   for j in range(m)] for i in range(n)]),
                 1, -1)
-    return matrix
+    return network
 
+
+def initialize_random_vector_network(N, M, F, q):
+    network = np.random.randint(0, q, size=(N, M, F))
+    categories = np.arange(q)
+    network = np.take(categories, network)
+    return network
 
 def random_element(matrix):
     """

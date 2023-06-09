@@ -14,11 +14,11 @@ if not os.path.exists('./tests/' + id_test):
 
 
 # PARAMS of the test
-max_iter = 200000000
+max_iter = 500000000
 num_max_stuck = max(200, max_iter//100)
-circle = True
+circle = False
 radius = 0.48
-bias = 0.35
+bias = 0.15
 
 # Shape of the population (N, M)
 n = 200
@@ -27,9 +27,9 @@ m = 250
 
 # Initialize population opinion
 if circle:
-    population_opinion = initialize_circle(n, m, radius)
+    population_opinion = initialize_circular_scalar_network(n, m, radius)
 else:
-    population_opinion = initialize_random_matrix(n, m, bias)
+    population_opinion = initialize_random_scalar_network(n, m, bias)
 
 # Plot the initial state
 plt.figure(figsize=(8, 6))
@@ -55,7 +55,7 @@ for iteration in range(max_iter):
     # Select a random neighbor of this element: jj
     neighbor = random_neighbor(elem, n, m)
 
-    # Update the opinion of the agent ii according to Voter model
+    # Update the opinion of agent ii according to Voter model
     if population_opinion[elem] == population_opinion[neighbor]:
         no_changes_since += 1
     else:
@@ -80,7 +80,7 @@ for iteration in range(max_iter):
         plt.xticks([])
         plt.yticks([])
         plt.tight_layout()
-        plt.savefig(f'./tests/{id_test}/population_iter{iteration}.png')
+        plt.savefig(f'./tests/{id_test}/population_iter{iteration+1}.png')
         plt.close()
 
 dt = time.time() - t0

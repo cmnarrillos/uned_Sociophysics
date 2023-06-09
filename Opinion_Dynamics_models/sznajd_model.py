@@ -14,22 +14,22 @@ if not os.path.exists('./tests/' + id_test):
 
 
 # PARAMS of the test
-max_iter = 50000
+max_iter = 5000000
 num_max_stuck = max(200, max_iter//100)
 circle = False
 radius = 0.48
 bias = 0.2
 
 # Shape of the population (N, M)
-n = 200
-m = 250
+n = 100
+m = 125
 
 
 # Initialize population opinion
 if circle:
-    population_opinion = initialize_circle(n, m, radius)
+    population_opinion = initialize_circular_scalar_network(n, m, radius)
 else:
-    population_opinion = initialize_random_matrix(n, m, bias)
+    population_opinion = initialize_random_scalar_network(n, m, bias)
 
 # Plot the initial state
 plt.figure(figsize=(8, 6))
