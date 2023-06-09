@@ -31,7 +31,16 @@ else:
 
 t0 = time.time()
 
-population_opinion = initial_state
+population_opinion = initial_state.copy()
+
+plt.figure(figsize=(8, 6))
+plt.imshow(population_opinion, cmap='gray')
+plt.title(f'Initial state of Population Opinion')
+plt.colorbar(ticks=[-1, 1])
+plt.xticks([])
+plt.yticks([])
+plt.tight_layout()
+plt.savefig(f'./tests/{id_test}/population_init.png')
 
 no_changes_since = 0
 
@@ -56,7 +65,7 @@ for iteration in range(max_iter):
         break
 
     # Plot intermediate steps through the process
-    if (iteration % (max_iter//20) == 0) & (iteration > 0):
+    if (iteration+1) % (max_iter//20) == 0:
         plt.figure(figsize=(8, 6))
         plt.imshow(population_opinion, cmap='gray')
         plt.title(f'Population Opinion after {iteration+1} iterations')
