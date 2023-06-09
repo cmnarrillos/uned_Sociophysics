@@ -12,10 +12,11 @@ id_test = 'sznajd_' + current_time.strftime("%Y-%m-%d_%H-%M-%S")
 if not os.path.exists('./tests/' + id_test):
     os.makedirs('./tests/' + id_test)
 
-max_iter = 500000
+max_iter = 50000
 num_max_stuck = max(200, max_iter//100)
-circle = True
+circle = False
 radius = 0.48
+bias = 0.2
 
 # Shape of the population (N, M)
 n = 200
@@ -26,7 +27,7 @@ m = 250
 if circle:
     initial_state = initialize_circle(n, m, radius)
 else:
-    initial_state = initialize_random_matrix(n, m)
+    initial_state = initialize_random_matrix(n, m, bias)
 
 
 t0 = time.time()
@@ -44,6 +45,7 @@ plt.savefig(f'./tests/{id_test}/population_init.png')
 plt.close()
 
 no_changes_since = 0
+num_1s = [np.count_nonzero(population_opinion == 1)]
 
 for iteration in range(max_iter):
     # Select a random element of the matrix: ii
@@ -61,6 +63,9 @@ for iteration in range(max_iter):
         else:
             population_opinion[neigh] = \
                 population_opinion[elem]
+
+    # Track population support of idea [1]
+    num_1s.append(np.count_nonzero(population_opinion == 1))
 
     # Check if any opinion has changed
     if np.max(np.abs(population_opinion - pop_op_tm1)) == 0:
@@ -83,7 +88,7 @@ for iteration in range(max_iter):
         plt.xticks([])
         plt.yticks([])
         plt.tight_layout()
-        plt.savefig(f'./tests/{id_test}/population_iter{iteration}.png')
+        plt.savefig(f'./tests/{id_test}/population_iter{iteration+1}.png')
         plt.close()
 
 dt = time.time() - t0
@@ -100,6 +105,21 @@ plt.xticks([])
 plt.yticks([])
 plt.tight_layout()
 plt.savefig(f'./tests/{id_test}/population_end.png')
+plt.close()
+
+
+pop_size = np.size(population_opinion)
+plt.figure(figsize=(8, 6))
+plt.plot([supporters*100/pop_size for supporters in num_1s])
+plt.title(f'Population sharing opinion [1]')
+plt.xlabel(f'iterations')
+plt.ylabel(f'% supporters')
+plt.xlim([0, len(num_1s)])
+plt.tight_layout()
+plt.savefig(f'./tests/{id_test}/support_evolution_1.png')
+plt.ylim([0, 100])
+plt.savefig(f'./tests/{id_test}/support_evolution.png')
+plt.close()
 
 
 with open(f'./tests/{id_test}/doc_test.txt', 'w') as f:
@@ -108,7 +128,8 @@ with open(f'./tests/{id_test}/doc_test.txt', 'w') as f:
         f.write(f'Initial opinions shape: circle of radius '
                 f'{int(min(n,m)*radius)} centered at ({n/2}, {m/2})\n\n')
     else:
-        f.write(f'Initial random distribution of 2 opinions\n\n')
+        f.write(f'Initial random distribution of 2 opinions biased with '
+                f'{100*bias}% supporting [1]\n\n')
     f.write(f'Max # of iterations allowed: {max_iter}\n')
     f.write(f'Stop criteria: no evolution since {num_max_stuck} steps ago\n\n')
     if iteration < max_iter-1:

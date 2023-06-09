@@ -3,9 +3,10 @@ import numpy as np
 
 random.seed(11859)
 
-def initialize_random_matrix(N, M):
-    matrix = np.array([[random.choice([-1, 1])
-                        for _ in range(N)] for _ in range(M)])
+def initialize_random_matrix(N, M, bias=0.5):
+    choices = [-1, 1]
+    probabilities = [1 - bias, bias]
+    matrix = np.random.choice(choices, size=(N, M), p=probabilities)
     return matrix
 
 
