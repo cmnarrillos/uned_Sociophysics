@@ -46,7 +46,7 @@ def random_neighbor(coords, N, M):
     return rnd_neighbor
 
 
-def sznajd_neighbors(i, j, N, M):
+def sznajd_neighbors(elem, N, M):
     """
     Returns:
         - partner neighbor indexes
@@ -55,6 +55,7 @@ def sznajd_neighbors(i, j, N, M):
           neighbors [0:3] take the value of the partner while neighbors
           [3:6] take the value of element (i,j)
     """
+    i, j = elem
     partner_neighbor = (i, (j+1) % M)
     neighbors_to_update = [(i-1,        j),
                            (i,          j-1),
