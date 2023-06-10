@@ -1,4 +1,5 @@
 import random
+import networkx as nx
 import numpy as np
 
 random.seed(11859)
@@ -30,6 +31,7 @@ def initialize_random_vector_network(N, M, F, q):
     categories = np.arange(q)
     network = np.take(categories, network)
     return network
+
 
 def random_element(matrix):
     """
@@ -72,4 +74,52 @@ def sznajd_neighbors(elem, N, M):
                            (i,         (j+2) % M),
                            ((i+1) % N, (j+1) % M)]
     return partner_neighbor, neighbors_to_update
+
+
+def create_small_world_network(N, k, p, bias=0.5):
+    """
+    Initializes Small World Network of N agents with k nerarest
+    neighbors and k probability of rewiring.
+    Each agent is initialized with an opinion sigma which is
+    randomly set to either -1 or 1 (being biased towards 1 as
+    given by bias param)
+    """
+    # Create a regular ring lattice
+    ring_lattice = nx.watts_strogatz_graph(N, k, p)
+
+    # Create a small-world network by rewiring edges
+    network = nx.connected_watts_strogatz_graph(N, k, p)
+
+    # Combine the attributes of the original ring lattice
+    for node in network.nodes:
+        network.nodes[node].update(ring_lattice.nodes[node])
+
+    # Assign a random sigma value to each node
+    for node in network.nodes:
+        sigma = -1 if random.uniform(0, 1) > bias else 1
+        network.nodes[node]['sigma'] = sigma
+
+    return network
+
+
+def proportion_different_sigma_connections(network):
+    """
+    Gets the proportion of connections between agents
+    with different opinion in the network
+    """
+    different_sigma_connections = 0
+    total_connections = 0
+
+    for edge in network.edges:
+        node1 = edge[0]
+        node2 = edge[1]
+        sigma1 = network.nodes[node1]['sigma']
+        sigma2 = network.nodes[node2]['sigma']
+
+        total_connections += 1
+        if sigma1 != sigma2:
+            different_sigma_connections += 1
+
+    return different_sigma_connections/total_connections
+
 
