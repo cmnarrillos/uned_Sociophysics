@@ -18,18 +18,20 @@ max_iter = 1000000
 num_max_stuck = max(200, max_iter//100)
 bias = 0.5
 # Parameters of the Small World Network
-n = 250  # Number of agents
-k = 10   # Number of nearest neighbors to connect
-p = 0.1  # Probability of rewiring
+n = 500  # Number of agents
+k = 8   # Number of nearest neighbors to connect
+p_max = 0.2  # Probability of rewiring (used as pmax if next param is false)
 just_1_p = False
-n_p_tries = 20
+n_p_tries = 10
 
 # Try different p values or not depending on param
 rho_multi = []
 dt = 0
 for ii in range(n_p_tries+1):
-    if not just_1_p:
-        p = ii/n_p_tries
+    if just_1_p:
+        p = p_max
+    else:
+        p = ii/n_p_tries*p_max
 
     # Initialize Small World Network
     small_world_network = create_small_world_network(n, k, p, bias)
@@ -52,9 +54,10 @@ for ii in range(n_p_tries+1):
         width=0.25,  # Adjust the edge width as desired
         alpha=1,  # Adjust the edge transparency as desired
     )
-    plt.title(f'Network schema (p={p})')
+    plt.title(f'Network schema (p={round(p,3)})')
     plt.axis('off')  # Disable axis display
     plt.savefig(f'./tests/{id_test}/network_{ii}.png')
+    plt.close()
 
 
     rho = [proportion_different_sigma_connections(small_world_network)]
@@ -107,11 +110,11 @@ if just_1_p:
     plt.plot(rho)
 else:
     for ii in range(n_p_tries+1):
-        plt.plot(rho_multi[ii], label=f'p={ii/n_p_tries}')
+        plt.plot(rho_multi[ii], label=f'p={round(ii/n_p_tries*p_max,3)}')
 plt.xlabel('iterations (t)')
 plt.ylabel('$\\rho$')
 if just_1_p:
-    plt.title(f'Order parameter (p={p})')
+    plt.title(f'Order parameter (p={round(p,3)})')
     plt.xlim([0, len(rho)])
     plt.ylim([min(rho), 1])
 else:
@@ -128,11 +131,11 @@ if just_1_p:
     plt.loglog(rho)
 else:
     for ii in range(n_p_tries+1):
-        plt.loglog(rho_multi[ii], label=f'p={ii/n_p_tries}')
+        plt.loglog(rho_multi[ii], label=f'p={round(ii/n_p_tries*p_max,3)}')
 plt.xlabel('iterations (t)')
 plt.ylabel('$\\rho$')
 if just_1_p:
-    plt.title(f'Order parameter (p={p})')
+    plt.title(f'Order parameter (p={round(p,3)})')
     plt.xlim([0, len(rho)])
     plt.ylim([min(rho), 1])
 else:
@@ -148,9 +151,14 @@ plt.close()
 # Document the test
 with open(f'./tests/{id_test}/doc_test.txt', 'w') as f:
     f.write(f'Voter test with population belonging to Small'
-            f' World Network of size {n}\n\n')
+            f' World Network of size {n}\n')
+    if just_1_p:
+        f.write(f'Number of nearest neighbors: {k}, rewiring prob: {round(p,3)}\n\n')
+    else:
+        f.write(f'Number of nearest neighbors: {k}, rewiring prob '
+                f'takes {n_p_tries} equispaced values between 0 and {round(p_max,3)}\n\n')
     f.write(f'Initial random distribution of 2 opinions biased with '
-            f'{100*bias}% supporting [1]\n\n')
+            f'{round(100*bias,2)}% supporting [1]\n\n')
     f.write(f'Max # of iterations allowed: {max_iter}\n')
     f.write(f'Stop criteria: no evolution since {num_max_stuck} steps ago\n\n')
     if iteration < max_iter-1:
