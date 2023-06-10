@@ -105,7 +105,7 @@ def create_small_world_network(N, k, p, bias=0.5):
 def proportion_different_sigma_connections(network):
     """
     Gets the proportion of connections between agents
-    with different opinion in the network
+    with different opinion in the network.
     """
     different_sigma_connections = 0
     total_connections = 0
@@ -123,3 +123,39 @@ def proportion_different_sigma_connections(network):
     return different_sigma_connections/total_connections
 
 
+def initialize_schelling_network(N, p, red_fraction):
+    """
+    Initialize the network for implementing Schelling segregation
+     model with two types of agents: red and blue.
+    """
+    network = nx.grid_2d_graph(N, N)
+    num_agents = int((1-p) * N * N)
+    agent_nodes = random.sample(list(network.nodes), num_agents)
+
+    red_nodes = random.sample(agent_nodes, int(red_fraction * num_agents))
+    blue_nodes = list(set(agent_nodes) - set(red_nodes))
+
+    nx.set_node_attributes(network,
+                           {node: '' for node in network.nodes},
+                           name='color')
+    nx.set_node_attributes(network,
+                           {node: 'red' for node in red_nodes},
+                           name='color')
+    nx.set_node_attributes(network,
+                           {node: 'blue' for node in blue_nodes},
+                           name='color')
+
+    return network
+
+
+def compute_similarity(network, node):
+    """
+    Compute the similarity between a given node and its neighbors.
+    Needed for Schelling segregation model
+    """
+    color = network.nodes[node]['color']
+    neighbors = list(network.neighbors(node))  # Convert neighbors iterator to a list
+    num_neighbors = sum(network.nodes[neighbor]['color'] != '' for neighbor in neighbors)
+    similar_neighbors = sum(network.nodes[neighbor]['color'] == color for neighbor in neighbors)
+    similarity = similar_neighbors / num_neighbors if num_neighbors > 0 else 1  # Handle division by zero
+    return similarity
