@@ -17,7 +17,7 @@ if not os.path.exists('./tests/' + id_test):
 max_iter = 100
 
 # Schelling model parameters
-N = 100  # Grid size (N x N)
+N = 200  # Grid size (N x N)
 p = 0.08  # Voids density
 red_fraction = 0.45  # Fraction of red agents
 threshold = 0.55  # Similarity threshold for agent movement
