@@ -14,15 +14,15 @@ if not os.path.exists('./tests/' + id_test):
 
 
 # PARAMS of the test
-max_iter = 500000000
+max_iter = 50000
 num_max_stuck = max(200, max_iter//100)
 circle = False
 radius = 0.48
 bias = 0.15
 
 # Shape of the population (N, M)
-n = 200
-m = 250
+n = 40
+m = 50
 
 
 # Initialize population opinion
@@ -45,6 +45,7 @@ plt.close()
 
 no_changes_since = 0
 num_1s = [np.count_nonzero(population_opinion == 1)]
+rho = [proportion_different_sigma_lattice(population_opinion)]
 t0 = time.time()
 
 # Voter model
@@ -64,6 +65,8 @@ for iteration in range(max_iter):
 
     # Track population support of idea [1]
     num_1s.append(np.count_nonzero(population_opinion == 1))
+    # Store order parameter
+    rho.append(proportion_different_sigma_lattice(population_opinion))
 
     # Exit the loop if there are no updates
     if no_changes_since == num_max_stuck:
@@ -113,6 +116,32 @@ plt.tight_layout()
 plt.savefig(f'./tests/{id_test}/support_evolution_1.png')
 plt.ylim([0, 100])
 plt.savefig(f'./tests/{id_test}/support_evolution.png')
+plt.close()
+
+
+# Plot order parameter during simulation
+plt.figure(figsize=(8, 6))
+plt.plot(rho)
+plt.xlabel('iterations (t)')
+plt.ylabel('$\\rho$')
+plt.title(f'Order parameter')
+plt.xlim([0, len(rho)])
+plt.ylim([min(rho), 1])
+plt.tight_layout()
+plt.grid()
+plt.savefig(f'./tests/{id_test}/order_evolution.png')
+plt.close()
+
+plt.figure(figsize=(8, 6))
+plt.loglog(rho)
+plt.xlabel('iterations (t)')
+plt.ylabel('$\\rho$')
+plt.title(f'Order parameter')
+plt.xlim([0, len(rho)])
+plt.ylim([min(rho), 1])
+plt.tight_layout()
+plt.grid()
+plt.savefig(f'./tests/{id_test}/order_evolution_log.png')
 plt.close()
 
 

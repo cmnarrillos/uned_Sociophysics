@@ -123,6 +123,31 @@ def proportion_different_sigma_connections(network):
     return different_sigma_connections/total_connections
 
 
+def proportion_different_sigma_lattice(rectangular_array):
+    """
+    Gets the proportion of connections between elements
+    with different opinion in the rectangular array.
+    """
+    different_sigma_connections = 0
+    total_connections = 0
+
+    num_rows = len(rectangular_array)
+    num_cols = len(rectangular_array[0])
+
+    for i in range(num_rows):
+        for j in range(num_cols):
+            element = rectangular_array[i,j]
+            right_neighbor = rectangular_array[i, (j + 1) % num_cols]
+            bottom_neighbor = rectangular_array[(i + 1) % num_rows, j]
+
+            total_connections += 1
+
+            if element != right_neighbor or element != bottom_neighbor:
+                different_sigma_connections += 1
+
+    return different_sigma_connections / total_connections
+
+
 def initialize_schelling_network(N, p, red_fraction):
     """
     Initialize the network for implementing Schelling segregation

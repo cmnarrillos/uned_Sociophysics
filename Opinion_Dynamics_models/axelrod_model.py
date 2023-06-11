@@ -40,16 +40,19 @@ for ii in range(f):
     plt.figure(figsize=(8, 6))
     im = plt.imshow(population_culture[:, :, ii], cmap=catcmap)
     im.set_clim(0, q-1)
-    plt.title(f'Initial state of Population cultural profile (dim {ii})')
+    plt.title(f'Initial state of Population cultural profile '
+              f'(feature {ii+1})')
     plt.colorbar(ticks=[jj for jj in range(q)])
     plt.xticks([])
     plt.yticks([])
     plt.tight_layout()
-    plt.savefig(f'./tests/{id_test}/population_dim{ii}_init.png')
+    plt.savefig(f'./tests/{id_test}/population_dim{ii+1}_init.png')
     plt.close()
 
 
 no_changes_since = 0
+rho = [[proportion_different_sigma_lattice(
+        population_culture[:, :, ii]) for ii in range(f)]]
 t0 = time.time()
 
 # Axelrod model
@@ -72,6 +75,10 @@ for iteration in range(max_iter):
     else:
         no_changes_since += 1
 
+    # Store order parameter
+    rho.append([proportion_different_sigma_lattice(
+                population_culture[:, :, ii]) for ii in range(f)])
+
     # Exit the loop if there are no updates
     if no_changes_since == num_max_stuck:
         print(f'There have been {num_max_stuck} steps without changes.'
@@ -84,18 +91,17 @@ for iteration in range(max_iter):
             plt.figure(figsize=(8, 6))
             im = plt.imshow(population_culture[:, :, ii], cmap=catcmap)
             im.set_clim(0, q-1)
-            plt.title(f'Population cultural profile (dim {ii})'
+            plt.title(f'Population cultural profile (feature {ii+1})'
                       f' after {iteration+1} iterations')
             plt.colorbar(ticks=[jj for jj in range(q)])
             plt.xticks([])
             plt.yticks([])
             plt.tight_layout()
             plt.savefig(f'./tests/{id_test}/population_'
-                        f'dim{ii}_iter{iteration+1}.png')
+                        f'dim{ii+1}_iter{iteration+1}.png')
             plt.close()
 
 dt = time.time() - t0
-
 
 # Plot the population at the end of the process
 for ii in range(f):
@@ -103,17 +109,47 @@ for ii in range(f):
     im = plt.imshow(population_culture[:, :, ii], cmap=catcmap)
     im.set_clim(0, q-1)
     if iteration < max_iter-1:
-        plt.title(f'Population cultural profile (dim {ii})'
+        plt.title(f'Population cultural profile (feature {ii+1})'
                   f' after {iteration+1} iterations')
     else:
-        plt.title(f'Population cultural profile (dim {ii})'
+        plt.title(f'Population cultural profile (feature {ii+1})'
                   f' after {max_iter} iterations')
     plt.colorbar(ticks=[jj for jj in range(q)])
     plt.xticks([])
     plt.yticks([])
     plt.tight_layout()
-    plt.savefig(f'./tests/{id_test}/population_dim{ii}_end.png')
+    plt.savefig(f'./tests/{id_test}/population_dim{ii+1}_end.png')
     plt.close()
+
+
+# Plot order parameter during simulation
+plt.figure(figsize=(8, 6))
+for ii in range(f):
+    plt.plot([rr[ii] for rr in rho], label=f'feature {ii+1}')
+plt.xlabel('iterations (t)')
+plt.ylabel('$\\rho$')
+plt.title(f'Order parameter')
+plt.legend()
+plt.xlim([0, max([len([rr[ii] for rr in rho]) for ii in range(f)])] )
+plt.ylim([min([min([rr[ii] for rr in rho]) for ii in range(f)]), 1])
+plt.tight_layout()
+plt.grid()
+plt.savefig(f'./tests/{id_test}/order_evolution.png')
+plt.close()
+
+plt.figure(figsize=(8, 6))
+for ii in range(f):
+    plt.loglog([rr[ii] for rr in rho], label=f'feature {ii+1}')
+plt.xlabel('iterations (t)')
+plt.ylabel('$\\rho$')
+plt.title(f'Order parameter')
+plt.legend()
+plt.xlim([0, max([len([rr[ii] for rr in rho]) for ii in range(f)])] )
+plt.ylim([min([min([rr[ii] for rr in rho]) for ii in range(f)]), 1])
+plt.tight_layout()
+plt.grid()
+plt.savefig(f'./tests/{id_test}/order_evolution_log.png')
+plt.close()
 
 
 # Document the test
