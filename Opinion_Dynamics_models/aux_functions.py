@@ -153,7 +153,6 @@ def compute_similarity(network, node):
     Compute the similarity between a given node and its neighbors.
     Needed for Schelling segregation model
     """
-    i, j = node
     color = network.nodes[node]['color']
     neighbors = list(network.neighbors(node))  # Take 4 closest neighbors
     neighbors = find_corner_neighbors(network, neighbors) # Add 4 corners

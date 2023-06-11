@@ -14,13 +14,13 @@ if not os.path.exists('./tests/' + id_test):
 
 
 # PARAMS of the test
-max_iter = 100
+max_iter = 1500
 
 # Schelling model parameters
-N = 200  # Grid size (N x N)
-p = 0.08  # Voids density
+N = 100  # Grid size (N x N)
+p = 0.05  # Voids density
 red_fraction = 0.45  # Fraction of red agents
-threshold = 0.55  # Similarity threshold for agent movement
+threshold = 0.70  # Similarity threshold for agent movement
 
 # Initialize the network
 network = initialize_schelling_network(N, p, red_fraction)
@@ -56,6 +56,8 @@ for iteration in range(max_iter):
         similarity = compute_similarity(network, node)
         # If the agent is not satisfied, moves to an empty node
         if similarity < threshold:
+            max_satisfaction = similarity
+            best_loc = node
             unsatisfied_agents += 1
             vacant_nodes = list([n for n in network.nodes
                                  if network.nodes[n]['color'] == ''])
@@ -77,14 +79,29 @@ for iteration in range(max_iter):
                     else:
                         # Try again (leave vacant location empty)
                         network.nodes[new_location]['color'] = ''
+                        # Store in memory if it was best among tried locations (jic)
+                        if satisfaction_new > max_satisfaction:
+                            max_satisfaction = satisfaction_new
+                            best_loc = new_location
+                if not move_occurred:
+                    if not best_loc == node:
+                        network.nodes[best_loc]['color'] =\
+                            network.nodes[node]['color']
+                        network.nodes[node]['color'] = ''
+                        move_occurred = True
 
     # The simulation ends if all agents are satisfied or
     # there's no available space
     if not move_occurred:
-        break
+        if last_stopped:
+            break
+        last_stopped = True
+    else:
+        last_stopped = False
 
     # Plot intermediate steps through the process
     if (iteration+1) % (max_iter//20) == 0:
+    # if True:
         pos = {(x, y): (x, y) for x, y in network.nodes}
         node_colors = ['w' if network.nodes[node]['color'] == ''
                        else network.nodes[node]['color']
