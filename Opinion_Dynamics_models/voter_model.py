@@ -14,11 +14,11 @@ if not os.path.exists('./tests/' + id_test):
 
 
 # PARAMS of the test
-max_iter = 50000
+max_iter = 10000000
 num_max_stuck = max(200, max_iter//100)
 circle = False
 radius = 0.48
-bias = 0.15
+bias = 0.5
 
 # Shape of the population (N, M)
 n = 40
@@ -75,7 +75,7 @@ for iteration in range(max_iter):
         break
 
     # Plot intermediate steps through the process
-    if (iteration+1) % (max_iter//20) == 0:
+    if (iteration+1) % (max_iter//100) == 0:
         plt.figure(figsize=(8, 6))
         plt.imshow(population_opinion, cmap='gray')
         plt.title(f'Population Opinion after {iteration+1} iterations')

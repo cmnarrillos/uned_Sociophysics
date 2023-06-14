@@ -14,12 +14,12 @@ if not os.path.exists('./tests/' + id_test):
 
 
 # PARAMS of the test
-max_iter = 1000000
+max_iter = 10000000
 num_max_stuck = max(200, max_iter//100)
 bias = 0.5
 # Parameters of the Small World Network
-n = 500  # Number of agents
-k = 8   # Number of nearest neighbors to connect
+n = 50  # Number of agents
+k = 3   # Number of nearest neighbors to connect
 p_max = 0.2  # Probability of rewiring (used as pmax if next param is false)
 just_1_p = False
 n_p_tries = 10
@@ -59,11 +59,9 @@ for ii in range(n_p_tries+1):
     plt.savefig(f'./tests/{id_test}/network_{ii}.png')
     plt.close()
 
-
     rho = [proportion_different_sigma_connections(small_world_network)]
     no_changes_since = 0
     t0 = time.time()
-
 
     # Voter model
     for iteration in range(max_iter):
@@ -100,7 +98,6 @@ for ii in range(n_p_tries+1):
     else:
         rho_multi.append(rho)
 
-
     dt = dt + time.time() - t0
 
 
@@ -123,6 +120,7 @@ else:
     plt.xlim([0, max([len(rho_) for rho_ in rho_multi])])
     plt.ylim([min([min(rho_) for rho_ in rho_multi]), 1])
 plt.tight_layout()
+plt.grid()
 plt.savefig(f'./tests/{id_test}/order_evolution.png')
 plt.close()
 
@@ -144,6 +142,7 @@ else:
     plt.xlim([0, max([len(rho_) for rho_ in rho_multi])])
     plt.ylim([min([min(rho_) for rho_ in rho_multi]), 1])
 plt.tight_layout()
+plt.grid()
 plt.savefig(f'./tests/{id_test}/order_evolution_log.png')
 plt.close()
 
@@ -153,10 +152,12 @@ with open(f'./tests/{id_test}/doc_test.txt', 'w') as f:
     f.write(f'Voter test with population belonging to Small'
             f' World Network of size {n}\n')
     if just_1_p:
-        f.write(f'Number of nearest neighbors: {k}, rewiring prob: {round(p,3)}\n\n')
+        f.write(f'Number of nearest neighbors: {k}, rewiring prob: '
+                f'{round(p,3)}\n\n')
     else:
         f.write(f'Number of nearest neighbors: {k}, rewiring prob '
-                f'takes {n_p_tries} equispaced values between 0 and {round(p_max,3)}\n\n')
+                f'takes {n_p_tries} equispaced values between 0 and '
+                f'{round(p_max,3)}\n\n')
     f.write(f'Initial random distribution of 2 opinions biased with '
             f'{round(100*bias,2)}% supporting [1]\n\n')
     f.write(f'Max # of iterations allowed: {max_iter}\n')

@@ -14,11 +14,11 @@ if not os.path.exists('./tests/' + id_test):
 
 
 # PARAMS of the test
-max_iter = 50000
+max_iter = 2000000
 num_max_stuck = max(200, max_iter//100)
-circle = False
+circle = True
 radius = 0.48
-bias = 0.4
+bias = 0.5
 
 # Shape of the population (N, M)
 n = 40

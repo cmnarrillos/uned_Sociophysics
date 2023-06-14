@@ -18,9 +18,9 @@ max_iter = 500
 
 # Schelling model parameters
 N = 100  # Grid size (N x N)
-p = 0.05  # Voids density
+p = 0.02  # Voids density
 red_fraction = 0.45  # Fraction of red agents
-threshold = 0.65  # Similarity threshold for agent movement
+threshold = 0.67  # Similarity threshold for agent movement
 
 # Initialize the network
 network = initialize_schelling_network(N, p, red_fraction)
@@ -84,7 +84,7 @@ for iteration in range(max_iter):
                     else:
                         # Try again (leave vacant location empty)
                         network.nodes[new_location]['color'] = ''
-                        # Store in memory if it was best among tried locations (jic)
+                        # Store in memory if it was best among tried locations
                         if satisfaction_new > max_satisfaction:
                             max_satisfaction = satisfaction_new
                             best_loc = new_location
@@ -151,6 +151,7 @@ with open(f'./tests/{id_test}/doc_test.txt', 'w') as fw:
         fw.write(f'Process finished at iter {iteration}\n\n')
     else:
         fw.write(f'Process stopped due to max iter criteria\n\n')
+    fw.write(f'{movements_total} switches have occurred\n\n')
     fw.write(f'There are {unsatisfied_agents} agents which are still '
              f'unsatisfied but could not find a suitable node to move into \n')
     fw.write(f'Time employed for running and plotting intermediate '

@@ -181,9 +181,12 @@ def compute_similarity(network, node):
     color = network.nodes[node]['color']
     neighbors = list(network.neighbors(node))  # Take 4 closest neighbors
     neighbors = find_corner_neighbors(network, neighbors) # Add 4 corners
-    num_neighbors = sum(network.nodes[neighbor]['color'] != '' for neighbor in neighbors)
-    similar_neighbors = sum(network.nodes[neighbor]['color'] == color for neighbor in neighbors)
-    similarity = similar_neighbors / num_neighbors if num_neighbors > 0 else 1  # Handle division by zero
+    num_neighbors = sum(network.nodes[neighbor]['color'] != ''
+                        for neighbor in neighbors)
+    similar_neighbors = sum(network.nodes[neighbor]['color'] == color
+                            for neighbor in neighbors)
+    similarity = similar_neighbors / num_neighbors if num_neighbors > 0 \
+        else 1  # Handle division by zero
     return similarity
 
 
