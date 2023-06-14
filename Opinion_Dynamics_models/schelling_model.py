@@ -14,13 +14,13 @@ if not os.path.exists('./tests/' + id_test):
 
 
 # PARAMS of the test
-max_iter = 1500
+max_iter = 500
 
 # Schelling model parameters
 N = 100  # Grid size (N x N)
 p = 0.05  # Voids density
 red_fraction = 0.45  # Fraction of red agents
-threshold = 0.70  # Similarity threshold for agent movement
+threshold = 0.65  # Similarity threshold for agent movement
 
 # Initialize the network
 network = initialize_schelling_network(N, p, red_fraction)
@@ -40,11 +40,13 @@ plt.close()
 
 
 t0 = time.time()
+movements_total = 0
 # Simulate Schelling segregation model
 node_list = list(network.nodes)
 for iteration in range(max_iter):
     move_occurred = False
     unsatisfied_agents = 0
+    print(f'Iter {iteration+1}')
 
     random.shuffle(node_list)
     for node in node_list:
@@ -63,6 +65,7 @@ for iteration in range(max_iter):
                                  if network.nodes[n]['color'] == ''])
             random.shuffle(vacant_nodes)
             if vacant_nodes:
+                unsatisfied_moved = False
                 for new_location in vacant_nodes:
                     # Try moving to vacant node
                     network.nodes[new_location]['color'] = \
@@ -74,6 +77,8 @@ for iteration in range(max_iter):
                         # Moved to vacant location (old location is now empty)
                         network.nodes[node]['color'] = ''
                         move_occurred = True
+                        unsatisfied_moved = True
+                        movements_total += 1
                         unsatisfied_agents -= 1
                         break
                     else:
@@ -83,12 +88,13 @@ for iteration in range(max_iter):
                         if satisfaction_new > max_satisfaction:
                             max_satisfaction = satisfaction_new
                             best_loc = new_location
-                if not move_occurred:
+                if not unsatisfied_moved:
                     if not best_loc == node:
                         network.nodes[best_loc]['color'] =\
                             network.nodes[node]['color']
                         network.nodes[node]['color'] = ''
                         move_occurred = True
+                        movements_total += 1
 
     # The simulation ends if all agents are satisfied or
     # there's no available space
@@ -100,7 +106,7 @@ for iteration in range(max_iter):
         last_stopped = False
 
     # Plot intermediate steps through the process
-    if (iteration+1) % (max_iter//20) == 0:
+    if (iteration+1) % (max_iter//50) == 0:
     # if True:
         pos = {(x, y): (x, y) for x, y in network.nodes}
         node_colors = ['w' if network.nodes[node]['color'] == ''
@@ -110,10 +116,11 @@ for iteration in range(max_iter):
         nx.draw(network, pos, node_size=250000/N**2,
                 node_color=node_colors, with_labels=False)
         plt.title(f'Schelling Segregation Model '
-                  f'after {iteration+1} steps')
+                  f'after {movements_total} switches')
         plt.savefig(f'./tests/{id_test}/'
                     f'segregation_iter{iteration+1}.png')
         plt.close()
+        print(f'Switches {movements_total}')
 
 dt = time.time() - t0
 
@@ -125,7 +132,7 @@ node_colors = ['w' if network.nodes[node]['color'] == ''
 plt.figure(figsize=(8, 8))
 nx.draw(network, pos, node_size=250000/N**2,
         node_color=node_colors, with_labels=False)
-plt.title(f'Schelling Segregation Model after {iteration+1} steps')
+plt.title(f'Schelling Segregation Model after {movements_total} switches')
 plt.savefig(f'./tests/{id_test}/segregation_end.png')
 plt.close()
 
