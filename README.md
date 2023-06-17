@@ -9,7 +9,7 @@ Different unrelated tasks had to be done, so different
 subdirectories have been employed:
 
 - Opinion_Dynamics_threshold: contains some functionalities to analyse Galam's opinion dynamics model
-- Opinion_Dynamics_models: implements and tests different sociophysical models:
+- Opinion_Dynamics_models: Monte Carlo simulations of different sociophysical models:
   - Voter model for opinion dynamics
   - Sznajd model for opinion dynamics
   - Axelrod model for cultural dynamics

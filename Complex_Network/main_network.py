@@ -112,14 +112,16 @@ if True:
     plt.title('Clustering Coefficient Cumulative Distribution')
     plt.savefig(f'./tests/{id_test}/clustering_cumulative.png')
 
-    print('Average clustering coefficient of the network: ', np.mean(sorted_coefficients))
+    print('Average clustering coefficient of the network: ',
+          np.mean(sorted_coefficients))
     print()
 
 
 # Compute the shortest paths for all pairs
 if True:
     shortest_paths = dict(nx.all_pairs_shortest_path_length(graph))
-    path_lengths = [length for paths in shortest_paths.values() for length in paths.values()]
+    path_lengths = [length for paths in shortest_paths.values()
+                    for length in paths.values()]
     hist, bins = np.histogram(path_lengths, bins=range(max(path_lengths)+2))
 
     # Plotting the histogram
@@ -132,7 +134,8 @@ if True:
     plt.title('Distribution of Shortest Path Lengths')
     plt.savefig(f'./tests/{id_test}/shortest_path_hist.png')
 
-    print('Average shortest path between 2 points of the network: ', np.mean(path_lengths))
+    print('Average shortest path between 2 points of the network: ',
+          np.mean(path_lengths))
     print('Diameter of the network: ', np.max(path_lengths))
     print()
 
@@ -150,7 +153,8 @@ if True:
     # Compute the eigenvalues
     eigenvalues = np.real(np.linalg.eigvals(adj_matrix))
 
-    print('Max eigenvalue of adjacent matrix of the network: ', np.max(eigenvalues))
+    print('Max eigenvalue of adjacent matrix of the network: ',
+          np.max(eigenvalues))
     print('Median eigenvalue: ', np.median(eigenvalues))
     print()
 
@@ -162,8 +166,10 @@ if True:
 
     # Plot the spectral density
     plt.figure(figsize=(8, 6))
-    plt.plot(lambda_array / factor, rho * factor, 'b', label='Arxiv network')
-    plt.plot(lambda_array / factor, rho_random * factor, 'k--', label='random network')
+    plt.plot(lambda_array / factor, rho * factor,
+             'b', label='Arxiv network')
+    plt.plot(lambda_array / factor, rho_random * factor,
+             'k--', label='random network')
     plt.xlabel('$ \\lambda/\\sqrt{Np(1-p)}$')
     plt.ylabel('$ \\rho \\sqrt{Np(1-p)}$')
     plt.xlim([min(lambda_array)/factor, max(lambda_array)/factor])
@@ -209,8 +215,8 @@ if True:
         alpha=0.5,  # Adjust the edge transparency as desired
     )
     sm = plt.cm.ScalarMappable(cmap='coolwarm',
-                               norm=plt.Normalize(vmin=1,
-                                                  vmax=max(list(degree.values()))))
+                               norm=plt.Normalize(
+                                   vmin=1, vmax=max(list(degree.values()))))
     sm.set_array([])
     cbar = plt.colorbar(sm, label='Degree')
     plt.title('General Relativity Arxiv (1993-2003)')
@@ -239,8 +245,8 @@ if True:
         alpha=0.5,  # Adjust the edge transparency as desired
     )
     sm = plt.cm.ScalarMappable(cmap='coolwarm',
-                               norm=plt.Normalize(vmin=1,
-                                                  vmax=max(list(degree.values()))))
+                               norm=plt.Normalize(
+                                   vmin=1, vmax=max(list(degree.values()))))
     sm.set_array([])
     cbar = plt.colorbar(sm, label='Degree')
     plt.title('General Relativity Arxiv (1993-2003)')
