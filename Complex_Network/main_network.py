@@ -25,6 +25,7 @@ print('Number of edges:', graph.number_of_edges())
 p = 0
 # print('Number of categories:', len(categories))
 print('Elapsed time for loading: ', time.time()-t0)
+print()
 t0 = time.time()
 
 
@@ -39,6 +40,7 @@ if True:
     p = np.mean(list(degree.values())) / graph.number_of_nodes()
     print('Probability of 2 random nodes connected: p=', p)
     N = graph.number_of_nodes()
+    print()
 
     # Baseline: random network with theoretical poisson distribution
     x = np.arange(0, N)  # Range of values to calculate CDF
@@ -111,6 +113,7 @@ if True:
     plt.savefig(f'./tests/{id_test}/clustering_cumulative.png')
 
     print('Average clustering coefficient of the network: ', np.mean(sorted_coefficients))
+    print()
 
 
 # Compute the shortest paths for all pairs
@@ -121,7 +124,7 @@ if True:
 
     # Plotting the histogram
     plt.figure(figsize=(8, 6))
-    plt.bar(bins[:-1]+0.5, hist, width=1)
+    plt.bar(bins[:-1], hist, width=1)
     plt.xlim([0, max(path_lengths) + 1])
     plt.xlabel('Shortest Path Length')
     plt.ylabel('Frequency')
@@ -131,6 +134,7 @@ if True:
 
     print('Average shortest path between 2 points of the network: ', np.mean(path_lengths))
     print('Diameter of the network: ', np.max(path_lengths))
+    print()
 
 # Compute the Spectral density
 if True:
@@ -148,6 +152,7 @@ if True:
 
     print('Max eigenvalue of adjacent matrix of the network: ', np.max(eigenvalues))
     print('Median eigenvalue: ', np.median(eigenvalues))
+    print()
 
     lambda_array = np.linspace(min(min(eigenvalues), -3*factor),
                                max(eigenvalues), 1000)
@@ -170,6 +175,8 @@ if True:
 
 
 print('Elapsed time for computing: ', time.time()-t0)
+print()
+print()
 
 if True:
     # Plot the network
@@ -239,6 +246,34 @@ if True:
     plt.title('General Relativity Arxiv (1993-2003)')
     plt.axis('off')
     plt.savefig(f'./tests/{id_test}/network_schema.pdf')
+
+# Find subgraphs and plot them
+if True:
+    subgraphs = find_subgraphs_recursive(graph)
+    for ii, subgraph in enumerate(subgraphs):
+        print(f'Subgraph {ii + 1} --> size: '
+              f'{subgraph.number_of_nodes()} nodes')
+        if subgraph.number_of_nodes() < 10:
+            print(f'Nodes: {subgraph.nodes()}')
+        print()
+
+    sizes = [subgraph.number_of_nodes() for subgraph in subgraphs]
+
+    size_counts = {}
+    for size in sizes:
+        if size in size_counts:
+            size_counts[size] += 1
+        else:
+            size_counts[size] = 1
+
+    table = []
+    table.append(("Subgraph Size", "Number of Subgraphs"))
+    for size, count in size_counts.items():
+        table.append((size, count))
+
+    # Print the table
+    for row in table:
+        print("{:<15} {:<20}".format(*row))
 
 
 # Show plots
