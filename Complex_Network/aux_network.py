@@ -49,3 +49,31 @@ def estimate_spectral_density(graph, num_eigenvalues=100):
     eigenvalues, _ = sp_linalg.eigsh(adj_matrix, k=num_eigenvalues)
 
     return eigenvalues
+
+
+def dirac_delta(x, x0, sigma=1e-5):
+    return np.exp(-0.5 * ((x - x0) / sigma) ** 2) / (sigma * np.sqrt(2 * np.pi))
+
+
+def compute_rho_array(eigenvalues, lambda_array):
+    N = len(eigenvalues)
+    rho_array = []
+    threshold = lambda_array[1]-lambda_array[0]
+    for lambda_val in lambda_array:
+        delta_vals = np.array([dirac_delta(lambda_val, eig_val, threshold)
+                               for eig_val in eigenvalues])
+        rho_val = np.sum(delta_vals) / N
+        rho_array.append(rho_val)
+    return np.array(rho_array)
+
+
+def compute_rho_array_random(N, p, lambda_array):
+    rho_array = []
+    for lambda_val in lambda_array:
+        if abs(lambda_val) < 2*np.sqrt(N * p * (1-p)):
+            rho_val = np.sqrt(4 * N * p * (1-p) - lambda_val**2) / \
+                      (2 * np.pi * N * p * (1 - p))
+        else:
+            rho_val = 0
+        rho_array.append(rho_val)
+    return np.array(rho_array)
