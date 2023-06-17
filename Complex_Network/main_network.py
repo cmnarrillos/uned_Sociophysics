@@ -103,7 +103,7 @@ if True:
 
     # Plotting the cumulative distribution
     plt.figure(figsize=(8, 6))
-    plt.plot(clustering_vals, cumulative_distribution/num_nodes, 'b')
+    plt.plot(clustering_vals, 1-cumulative_distribution/num_nodes, 'b')
     plt.xlim([0, 1])
     plt.ylim([0, 1])
     plt.xlabel('Clustering Coefficient')
