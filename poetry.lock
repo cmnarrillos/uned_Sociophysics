@@ -504,6 +504,17 @@ files = [
 ]
 
 [[package]]
+name = "snap"
+version = "0.5"
+description = "snap - zope 3 frontend for entransit"
+category = "main"
+optional = false
+python-versions = "*"
+files = [
+    {file = "snap-0.5.tar.gz", hash = "sha256:393531130d7ac5633967718a19dd6c3b757291bc4c113ef697eeefaa8759d4cb"},
+]
+
+[[package]]
 name = "zipp"
 version = "3.15.0"
 description = "Backport of pathlib-compatible object wrapper for zip files"
@@ -522,4 +533,4 @@ testing = ["big-O", "flake8 (<5)", "jaraco.functools", "jaraco.itertools", "more
 [metadata]
 lock-version = "2.0"
 python-versions = "<3.12,>=3.8"
-content-hash = "26372c4ac7cee06f8e0aa00e3799038d6ddf0fced24ddf0ae59f5f1812e71091"
+content-hash = "386fc754f281d0b9d5d0aba54d4ecc118cc218dd2f06e61050f42ac93916885e"
