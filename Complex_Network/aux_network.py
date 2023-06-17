@@ -77,3 +77,26 @@ def compute_rho_array_random(N, p, lambda_array):
             rho_val = 0
         rho_array.append(rho_val)
     return np.array(rho_array)
+
+
+def find_subgraphs_recursive(graph):
+    subgraphs = []  # List to store the identified subgraphs
+
+    visited = set()  # Set to keep track of visited nodes
+
+    def dfs(node, subgraph):
+        visited.add(node)
+        subgraph.add_node(node)
+
+        for neighbor in graph.neighbors(node):
+            if neighbor not in visited:
+                subgraph.add_edge(node, neighbor)
+                dfs(neighbor, subgraph)
+
+    for node in graph.nodes:
+        if node not in visited:
+            subgraph = nx.Graph()
+            dfs(node, subgraph)
+            subgraphs.append(subgraph)
+
+    return subgraphs

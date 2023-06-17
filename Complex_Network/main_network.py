@@ -29,8 +29,8 @@ t0 = time.time()
 
 
 # Get the cumulative distribution of node degrees
+degree = dict(graph.degree())
 if True:
-    degree = dict(graph.degree())
     degree_histogram = nx.degree_histogram(graph)
     # Calculate the cumulative distribution
     degree_cumulative = np.cumsum(degree_histogram)
@@ -47,9 +47,9 @@ if True:
     # Plotting the cumulative distribution
     plt.figure(figsize=(8, 6))
     plt.plot(range(len(degree_cumulative)),
-             degree_cumulative/max(degree_cumulative),
-             'r', label='Arxiv network')
-    plt.plot(x, poisson_cdf, 'k--', label='random network')
+             1-degree_cumulative/max(degree_cumulative),
+             'b', label='Arxiv network')
+    plt.plot(x, 1-poisson_cdf, 'k--', label='random network')
     plt.xlim([1, len(degree_cumulative)])
     plt.ylim([0, 1])
     plt.xlabel('Degree')
@@ -60,12 +60,26 @@ if True:
     plt.savefig(f'./tests/{id_test}/degree_cumulative.png')
 
     plt.figure(figsize=(8, 6))
-    plt.semilogx(range(len(degree_cumulative)),
-                 degree_cumulative/max(degree_cumulative),
-                 'r', label='Arxiv network')
-    plt.semilogx(x, poisson_cdf, 'k--', label='random network')
+    plt.semilogy(range(len(degree_cumulative)),
+               1-degree_cumulative/max(degree_cumulative),
+               'b', label='Arxiv network')
+    plt.semilogy(x, 1-poisson_cdf, 'k--', label='random network')
     plt.xlim([1, len(degree_cumulative)])
-    plt.ylim([0, 1])
+    plt.ylim([1e-5, 1])
+    plt.xlabel('Degree')
+    plt.ylabel('Cumulative [% of nodes]')
+    plt.grid('minor')
+    plt.legend()
+    plt.title('Degree Cumulative Distribution')
+    plt.savefig(f'./tests/{id_test}/degree_cumulative_semilogy.png')
+
+    plt.figure(figsize=(8, 6))
+    plt.loglog(range(len(degree_cumulative)),
+               1-degree_cumulative/max(degree_cumulative),
+               'b', label='Arxiv network')
+    plt.loglog(x, 1-poisson_cdf, 'k--', label='random network')
+    plt.xlim([1, len(degree_cumulative)])
+    plt.ylim([1e-10, 1])
     plt.xlabel('Degree')
     plt.ylabel('Cumulative [% of nodes]')
     plt.grid('minor')
@@ -87,11 +101,12 @@ if True:
 
     # Plotting the cumulative distribution
     plt.figure(figsize=(8, 6))
-    plt.plot(clustering_vals, cumulative_distribution/num_nodes, 'r')
+    plt.plot(clustering_vals, cumulative_distribution/num_nodes, 'b')
     plt.xlim([0, 1])
     plt.ylim([0, 1])
     plt.xlabel('Clustering Coefficient')
     plt.ylabel('Cumulative [% of nodes]')
+    plt.grid()
     plt.title('Clustering Coefficient Cumulative Distribution')
     plt.savefig(f'./tests/{id_test}/clustering_cumulative.png')
 
@@ -106,10 +121,11 @@ if True:
 
     # Plotting the histogram
     plt.figure(figsize=(8, 6))
-    plt.bar(bins[:-1], hist, width=1)
+    plt.bar(bins[:-1]+0.5, hist, width=1)
     plt.xlim([0, max(path_lengths) + 1])
     plt.xlabel('Shortest Path Length')
     plt.ylabel('Frequency')
+    plt.grid()
     plt.title('Distribution of Shortest Path Lengths')
     plt.savefig(f'./tests/{id_test}/shortest_path_hist.png')
 
@@ -133,14 +149,15 @@ if True:
     print('Max eigenvalue of adjacent matrix of the network: ', np.max(eigenvalues))
     print('Median eigenvalue: ', np.median(eigenvalues))
 
-    lambda_array = np.linspace(-3*factor, max(eigenvalues), 1000)
+    lambda_array = np.linspace(min(min(eigenvalues), -3*factor),
+                               max(eigenvalues), 1000)
     rho = compute_rho_array(eigenvalues, lambda_array)
 
     rho_random = compute_rho_array_random(N, p, lambda_array)
 
     # Plot the spectral density
     plt.figure(figsize=(8, 6))
-    plt.plot(lambda_array / factor, rho * factor, 'r', label='Arxiv network')
+    plt.plot(lambda_array / factor, rho * factor, 'b', label='Arxiv network')
     plt.plot(lambda_array / factor, rho_random * factor, 'k--', label='random network')
     plt.xlabel('$ \\lambda/\\sqrt{Np(1-p)}$')
     plt.ylabel('$ \\rho \\sqrt{Np(1-p)}$')
@@ -153,7 +170,6 @@ if True:
 
 
 print('Elapsed time for computing: ', time.time()-t0)
-
 
 if True:
     # Plot the network
@@ -223,6 +239,7 @@ if True:
     plt.title('General Relativity Arxiv (1993-2003)')
     plt.axis('off')
     plt.savefig(f'./tests/{id_test}/network_schema.pdf')
+
 
 # Show plots
 plt.show()
