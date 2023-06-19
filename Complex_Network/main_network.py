@@ -50,7 +50,7 @@ if True:
     plt.figure(figsize=(8, 6))
     plt.plot(range(len(degree_cumulative)),
              1-degree_cumulative/max(degree_cumulative),
-             'b', label='Arxiv network')
+             'b', label='arXiv network')
     plt.plot(x, 1-poisson_cdf, 'k--', label='random network')
     plt.xlim([1, len(degree_cumulative)])
     plt.ylim([0, 1])
@@ -64,7 +64,7 @@ if True:
     plt.figure(figsize=(8, 6))
     plt.semilogy(range(len(degree_cumulative)),
                1-degree_cumulative/max(degree_cumulative),
-               'b', label='Arxiv network')
+               'b', label='arXiv network')
     plt.semilogy(x, 1-poisson_cdf, 'k--', label='random network')
     plt.xlim([1, len(degree_cumulative)])
     plt.ylim([1e-5, 1])
@@ -78,7 +78,7 @@ if True:
     plt.figure(figsize=(8, 6))
     plt.loglog(range(len(degree_cumulative)),
                1-degree_cumulative/max(degree_cumulative),
-               'b', label='Arxiv network')
+               'b', label='arXiv network')
     plt.loglog(x, 1-poisson_cdf, 'k--', label='random network')
     plt.xlim([1, len(degree_cumulative)])
     plt.ylim([1e-10, 1])
@@ -167,7 +167,7 @@ if True:
     # Plot the spectral density
     plt.figure(figsize=(8, 6))
     plt.plot(lambda_array / factor, rho * factor,
-             'b', label='Arxiv network')
+             'b', label='arXiv network')
     plt.plot(lambda_array / factor, rho_random * factor,
              'k--', label='random network')
     plt.xlabel('$ \\lambda/\\sqrt{Np(1-p)}$')
@@ -219,7 +219,7 @@ if True:
                                    vmin=1, vmax=max(list(degree.values()))))
     sm.set_array([])
     cbar = plt.colorbar(sm, label='Degree')
-    plt.title('General Relativity Arxiv (1993-2003)')
+    plt.title('General Relativity arXiv (1993-2003)')
     plt.axis('off')
     plt.savefig(f'./tests/{id_test}/network_schema.png')
 
@@ -249,7 +249,7 @@ if True:
                                    vmin=1, vmax=max(list(degree.values()))))
     sm.set_array([])
     cbar = plt.colorbar(sm, label='Degree')
-    plt.title('General Relativity Arxiv (1993-2003)')
+    plt.title('General Relativity arXiv (1993-2003)')
     plt.axis('off')
     plt.savefig(f'./tests/{id_test}/network_schema.pdf')
 
